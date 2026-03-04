@@ -61,6 +61,15 @@ public class Piece {
     //please note that your piece must have some sort of logic. Just being able to move to every square on the board is not
     //going to score any points.
     public ArrayList<Square> getLegalMoves(Board b, Square start){
-    	return null;
+    	//the baord
+        Square[][] board = b.getSquareArray();
+
+        //we are at location board[start.getRow()][start.getCol()+1]
+
+        //make four different loops one for each diagonal direction (so topleft, topright, bottomleft, bottomright)
+        //inside each try to go to the next square if it's in bounds >=0 <8, ask that square are you occupied. s.isOccupied(). If it's not, you can go there. If it is ask is the enemy there? s.getOccupyingPiece().getColor() != color then i can go there as well
+        
+        
+        return null;
     }
 }
