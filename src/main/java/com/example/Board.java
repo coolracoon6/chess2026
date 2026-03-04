@@ -71,6 +71,19 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         // TO BE IMPLEMENTED FIRST
 
         // for (.....)
+        for ( int i = 0; i<board.length; i++){
+            for(int j=0; j<board[i].length; j++){
+                if(((i%2==0)&&(j%2==0))||((i%2!=0)&&(j%2!=0))) {
+                    board[i][j] = new Square(this,true,i,j);
+                    this.add(board[i][j]);
+                }
+                            else{
+                                board[i][j]= new Square(this, false,i,j);
+                                this.add(board[i][j]);
+                            }
+            }
+        }
+
         // populate the board with squares here. Note that the board is composed of 64
         // squares alternating from white to black.
         //IMPORTANT**** : please note for each square you create you HAVE to do "this.add(<your new square here>)" 
@@ -95,12 +108,23 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     // since we only have one kind of piece for now you need only set the same
     // number of pieces on either side.
     // it's up to you how you wish to arrange your pieces.
-    void initializePieces() {
-
-        board[0][0].put(new Piece(true, RESOURCES_WKING_PNG));
-
+    private void initializePieces() {
+        for(int i = 0; i<8;i++){
+        board[0][i].put(new Piece(true, RESOURCES_WKING_PNG));
     }
+        for(int i =0; i<8; i++){
+                board[1][i].put(new Piece(true, RESOURCES_WKING_PNG));
+        }
+    for(int i = 0; i<8; i++){
+        board[6][i].put(new Piece(false, RESOURCES_BKING_PNG));
+    
+    }
+        for(int i = 0; i<8; i++){
+                board[7][i].put(new Piece(false, RESOURCES_BKING_PNG));
 
+        }
+    }
+    
     public Square[][] getSquareArray() {
         return this.board;
     }
@@ -158,9 +182,18 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     // use the pieces "legal move" function to determine if this move is legal, then
     // complete it by moving the new piece to it's new board location.
     @Override
+    // precondition: currPiece has value and board and pieces exist
+    //postcondition: puts currPiece on endSquare and switches turn
     public void mouseReleased(MouseEvent e) {
+        if(currPiece!=null){
         endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
+        if ((currPiece.getLegalMoves(this,fromMoveSquare).contains(endSquare))){
+                endSquare.put(currPiece);
+                fromMoveSquare.put(null);
+                repaint();
 
+                whiteTurn=!whiteTurn;
+        }
         for(Square[] row: board){
             for(Square s: row){
                 s.setBorder(null);
