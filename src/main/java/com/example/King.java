@@ -20,6 +20,9 @@ public class King extends Piece {
 
         
     }
+    //overrides to String
+    //pre:must have toString
+    //post: returns color type of piece
 public String toString1(){
     return "A color type of piece";
 }  
