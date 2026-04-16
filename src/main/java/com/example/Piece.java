@@ -1,114 +1,56 @@
-package com.example;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
 import javax.imageio.ImageIO;
 
-//you will need to implement two functions in this file.
 public class Piece {
-    private final boolean color;
+    private boolean color;
     private BufferedImage img;
-    
-    public Piece(boolean isWhite, String img_file) {
-        this.color = isWhite;
-         
+
+    public Piece(boolean color, String img_file) {
+        this.color = color;
         try {
             if (this.img == null) {
-                this.img = ImageIO.read(new File(System.getProperty("user.dir")+img_file));
+                this.img = ImageIO.read(new File(System.getProperty("user.dir")
+                        + img_file));
             }
-          } catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("File not found: " + e.getMessage());
-          }
+        }
     }
-    
-    
 
-    
     public boolean getColor() {
         return color;
     }
-    
+
     public Image getImage() {
         return img;
     }
-    
-    //precondition: g and currentSquare must be on-null valid objects.
-    //postcondition: the image stored in the img property of this object is drawn to the screen.
+
     public void draw(Graphics g, Square currentSquare) {
         int x = currentSquare.getX();
         int y = currentSquare.getY();
-        
         g.drawImage(this.img, x, y, null);
     }
-    
-    
-    // TO BE IMPLEMENTED!
-    //return a list of every square that is "controlled" by this piece. A square is controlled
-    //if the piece capture into it legally.
-    //precondition: board and pieces are initialized
-    //postconditon: returns array list of squares controlled by the bishop
-    public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
-        ArrayList<Square> controlled = new ArrayList<Square>();
-        if ((((start.getCol()+1)<8)&&((start.getRow()+1)<8))){
-            controlled.add(board[start.getRow()+1][start.getCol()+1]);
-        }
-        if ((((start.getCol()+1)<8)&&((start.getRow()-1)>=0))){
-            controlled.add(board[start.getRow()-1][start.getCol()+1]);
-        }
-        if ((((start.getCol()-1)>=0)&&((start.getRow()+1)<8))){
-            controlled.add(board[start.getRow()-1][start.getCol()+1]);
-        }
-        if ((((start.getCol()-1)>=0)&&((start.getRow()-1)>=0))){
-            controlled.add(board[start.getRow()-1][start.getCol()-1]);
-        }
-        return controlled;
+
+    // to be overriden in each subclass
+    public ArrayList<Square> getLegalMoves(Board b, Square currentSquare) {
+        return null;
     }
-    
 
-    //TO BE IMPLEMENTED!
-    //implement the move function here
-    //it's up to you how the piece moves, but at the very least the rules should be logical and it should never move off the board!
-    //returns an arraylist of squares which are legal to move to
-    //please note that your piece must have some sort of logic. Just being able to move to every square on the board is not
-    //going to score any points.
-    //precondition: board and pieces are initialized
-    //postcondition: retur
-    public ArrayList<Square> getLegalMoves(Board b, Square start){
-    	//the baord
-        Square[][] board = b.getSquareArray();
-        ArrayList<Square> moves = new ArrayList<Square>();
-        if (((start.getCol()+2)<8)&&((start.getRow()+1)<8)){
-            if(b.getSquareArray()[start.getRow()+1][start.getCol()+1].getOccupyingPiece()==null || b.getSquareArray()[start.getRow()+1][start.getCol()+1].getOccupyingPiece().getColor()!=color){
-                moves.add(b.getSquareArray()[start.getRow()+1][start.getCol()+1]);
-            }
-            }
-            if ((((start.getCol()+1)<8)&& ((start.getRow()-1)>0))){
-                if(b.getSquareArray()[start.getRow()-1][start.getCol()+1].getOccupyingPiece()==null||b.getSquareArray()[start.getRow()-1][start.getCol()+1].getOccupyingPiece().getColor()!=color){
-                    moves.add(b.getSquareArray()[start.getRow()-1][start.getCol()+1]);
-            }
-            }
-            if ((((start.getCol()-1)>0)&&((start.getRow()+1)<8))){
-                if(b.getSquareArray()[start.getRow()+1][start.getCol()-1].getOccupyingPiece()==null||b.getSquareArray()[start.getRow()+1][start.getCol()-1].getOccupyingPiece().getColor()!=color){
-                    moves.add(b.getSquareArray()[start.getRow()+1][start.getCol()-1]);
-            }
-            }
-            if ((((start.getCol()-1)>0)&&((start.getRow()-1)>0))){
-                if(b.getSquareArray()[start.getRow()-1][start.getCol()-1].getOccupyingPiece()==null||b.getSquareArray()[start.getRow()-1][start.getCol()-1].getOccupyingPiece().getColor()!=color){
-                    moves.add(b.getSquareArray()[start.getRow()-1][start.getCol()-1]);
-            }
-            }
-            return moves;
+    // make sure to override this!
+    public String toString() {
+        if (color)
+            return "white";
+        else
+            return "black";
+    }
 
-        //we are at location board[start.getRow()][start.getCol()+1]
-
-        //make four different loops one for each diagonal direction (so topleft, topright, bottomleft, bottomright)
-        //inside each try to go to the next square if it's in bounds >=0 <8, ask that square are you occupied. s.isOccupied().
-        //  If it's not, you can go there. If it is ask is the enemy there? s.getOccupyingPiece().getColor() != color then i can go there as well
-        
-        
+    // to be implemented by each subclass
+    public ArrayList<Square> getControlledSquares(Square[][] board, Square currentSquare) {
+        return null;
     }
 }
