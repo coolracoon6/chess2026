@@ -181,6 +181,9 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         }
         repaint();
     }
+    private boolean isInCheck(boolean color){
+        return true;
+    }
 
     // TO BE IMPLEMENTED!
     // should move the piece to the desired location only if this is a legal move.
@@ -193,11 +196,18 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         if(currPiece!=null){
         endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
         if ((currPiece.getLegalMoves(this,fromMoveSquare).contains(endSquare))){
+                Piece captured = endSquare.getOccupyingPiece();
                 endSquare.put(currPiece);
                 fromMoveSquare.put(null);
-                repaint();
+                if(isInCheck(whiteTurn)){
+                    fromMoveSquare.put(currPiece);
+                    endSquare.put(captured);
+                } else {
+                    whiteTurn=!whiteTurn;
+                }
 
-                whiteTurn=!whiteTurn;
+                repaint();
+                
         }
         for(Square[] row: board){
             for(Square s: row){

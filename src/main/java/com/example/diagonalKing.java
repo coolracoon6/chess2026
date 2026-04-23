@@ -12,10 +12,10 @@ import javax.imageio.ImageIO;
 //you will need to implement two functions in this file.
 // pre: have class piece
 // post: extends piece so that you can get the color and image of your specific piece
-public class King extends Piece {
+public class diagonalKing extends Piece {
 
 
-    public King(boolean isWhite, String img_file) {
+    public diagonalKing(boolean isWhite, String img_file) {
         super(isWhite,img_file);
 
         
