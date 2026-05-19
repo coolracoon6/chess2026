@@ -123,11 +123,11 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     //             board[7][i].put(new Piece(false, RESOURCES_BKING_PNG));
 
     //     }
-    board[0][2].put(new Piece(false, RESOURCES_BBISHOP_PNG));
-    board[0][5].put(new Piece(false, RESOURCES_BBISHOP_PNG));
+    board[0][2].put(new Bishop(false, RESOURCES_BBISHOP_PNG));
+    board[0][5].put(new Bishop(false, RESOURCES_BBISHOP_PNG));
 
-    board[7][2].put(new Piece(true, RESOURCES_WBISHOP_PNG));
-    board[7][5].put( new Piece(true, RESOURCES_WBISHOP_PNG));
+    board[7][2].put(new Bishop(true, RESOURCES_WBISHOP_PNG));
+    board[7][5].put( new Bishop(true, RESOURCES_WBISHOP_PNG));
     }
     
     public Square[][] getSquareArray() {
@@ -181,8 +181,26 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         }
         repaint();
     }
-    private boolean isInCheck(boolean color){
-        return true;
+    private boolean isInCheck(boolean color){ //board --> Square --> Piece 
+        //step 1 loop through the board and find all the pieces of the opposite color
+        for (int i = 0; i<board.length; i++){
+            for(int j=0; j<board[i].length; j++){
+                Piece p = board[i][j].getOccupyingPiece();
+                if(p != null && p.getColor()!= color){
+                    //step 2 - ask each of these pieces " what squares do you control?" loop over those squares and ask them if they hold a king of the SAME color 
+                    ArrayList<Square>controlledSquares = p.getControlledSquares(board, board[i][j]);
+                    for(int sameColor = 0; sameColor<controlledSquares.size();sameColor++){
+                        if(controlledSquares.get(sameColor).getOccupyingPiece() instanceof diagonalKing && controlledSquares.get(sameColor).getOccupyingPiece().getColor()==color){
+                            return true;
+                        } 
+                    }
+                }
+            }
+        }
+        
+        
+        
+        return false;
     }
 
     // TO BE IMPLEMENTED!
@@ -221,6 +239,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         }
         currPiece = null;
         repaint();
+        }
     }
 
     @Override
